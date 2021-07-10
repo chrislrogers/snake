@@ -3,6 +3,7 @@ const c = canvas.getContext('2d');
 
 let grid = 20;
 let scale;
+let food;
 
 class Vector {
     constructor(x, y) {
@@ -23,6 +24,17 @@ class Snake {
         this.body[0].y += this.direction.y;
     }
 
+    eat(food) {
+        let foodX = Math.floor(food.x);
+        let foodY = Math.floor(food.y);
+        let bodyX = Math.floor(this.body[0].x);
+        let bodyY = Math.floor(this.body[0].y);
+        if (foodX === bodyX && foodY === bodyY) {
+            return true;
+        }
+        return false;
+    }
+
     setDirection(x, y) {
         if (scale) {
             this.direction.x = x;
@@ -32,7 +44,7 @@ class Snake {
 
     draw() {
         c.beginPath();
-        c.rect(this.body[0].x, this.body[0].y, scale, scale);
+        c.rect(part.x, part.y, scale, scale);
         c.fillStyle = 'yellow';
         c.fill();
     }
@@ -55,17 +67,20 @@ function init() {
         canvas.height = window.innerHeight;
         scale = window.innerHeight / grid;
     }
-    food =  new Vector(scale * (Math.floor(Math.random() * grid)), scale * (Math.floor(Math.random() * grid)));
+    food = new Vector(scale * (Math.floor(Math.random() * grid)), scale * (Math.floor(Math.random() * grid)));
     animate();
 }
 
 let snake = new Snake();
-let food;
 
 function animate() {
     setTimeout(function onTick() {
         requestAnimationFrame(animate);
         c.clearRect(0, 0, canvas.width, canvas.height);
+        if (snake.eat(food)) {
+            food.x = scale * (Math.floor(Math.random() * grid));
+            food.y = scale * (Math.floor(Math.random() * grid));
+        }
         snake.update();
         snake.draw();
         drawFood();
