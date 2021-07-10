@@ -43,10 +43,12 @@ class Snake {
     }
 
     draw() {
-        c.beginPath();
-        c.rect(part.x, part.y, scale, scale);
-        c.fillStyle = 'yellow';
-        c.fill();
+        for (let part of this.body) {
+            c.beginPath();
+            c.rect(part.x, part.y, scale, scale);
+            c.fillStyle = 'yellow';
+            c.fill();
+        }
     }
 }
 
