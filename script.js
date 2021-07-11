@@ -1,9 +1,32 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
+let canvasSize = 500;
 let grid = 20;
 let scale;
 let food;
+
+class Background {
+    constructor(light, dark) {
+        this.light = light;
+        this.dark = dark;
+    }
+
+    draw() {
+        let color = 0;
+        for (let i = 0; i < grid; i++) {
+            for (let j = 0; j < grid; j++) {
+                if ((i + j) % 2 === 0) {
+                    c.fillStyle = this.light;
+                } else {
+                    c.fillStyle = this.dark;
+                }
+                c.fillRect(i * scale, j * scale, scale, scale);
+                color++;
+            }
+        }
+    }
+}
 
 class Vector {
     constructor(x, y) {
@@ -52,6 +75,9 @@ class Snake {
     }
 }
 
+let background = new Background('#9a775b', '#3c2c21');
+let snake = new Snake();
+
 function drawFood() {
     c.beginPath();
     c.rect(food.x, food.y, scale, scale);
@@ -60,20 +86,12 @@ function drawFood() {
 }
 
 function init() {
-    if (window.innerHeight > window.innerWidth) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerWidth;
-        scale = window.innerWidth / grid;
-    } else if (window.innerHeight < window.innerWidth) {
-        canvas.width = window.innerHeight;
-        canvas.height = window.innerHeight;
-        scale = window.innerHeight / grid;
-    }
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    scale = canvasSize / grid;
     food = new Vector(scale * (Math.floor(Math.random() * grid)), scale * (Math.floor(Math.random() * grid)));
     animate();
 }
-
-let snake = new Snake();
 
 function animate() {
     setTimeout(function onTick() {
@@ -83,13 +101,12 @@ function animate() {
             food.x = scale * (Math.floor(Math.random() * grid));
             food.y = scale * (Math.floor(Math.random() * grid));
         }
+        background.draw();
         snake.update();
         snake.draw();
         drawFood();
     }, 300)
 }
-
-init();
 
 function keyToggle(key) {
     if (key === "ArrowLeft" || key === "a" || key === "A") {
@@ -109,3 +126,5 @@ function keyToggle(key) {
 document.onkeydown = function (e) {
     keyToggle(e.key);
 };
+
+init();
