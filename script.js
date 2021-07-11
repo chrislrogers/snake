@@ -75,7 +75,7 @@ class Snake {
     }
 }
 
-let background = new Background('#9a775b', '#3c2c21');
+let background = new Background('#401457', '#311340');
 let snake = new Snake();
 
 function drawFood() {
