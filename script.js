@@ -35,19 +35,21 @@ class Vector {
 }
 
 class Snake {
-    constructor() {
+    constructor(x, y, color) {
         this.body = [];
-        this.body[0] = new Vector(250, 250);
+        this.body[0] = new Vector(x, y);
         this.direction = new Vector(0, 0);
+        this.color = color;
     }
 
     update() {
         let head = this.body[this.body.length - 1];
-        head.x += this.direction.x;
-        head.y += this.direction.y;
+
         if (this.body.length > tail) {
             this.body.shift();
         }
+        head.x += this.direction.x;
+        head.y += this.direction.y;
         this.body.push(new Vector(head.x, head.y));
     }
 
@@ -80,7 +82,7 @@ class Snake {
         for (let part of this.body) {
             c.beginPath();
             c.rect(part.x, part.y, scale, scale);
-            c.fillStyle = 'yellow';
+            c.fillStyle = this.color;
             c.fill();
         }
     }
@@ -88,7 +90,7 @@ class Snake {
 
 let background = new Background('#401457', '#311340');
 let gameover = new Background('red', 'red');
-let snake = new Snake();
+let snake = new Snake(250, 250, 'yellow');
 
 function drawFood() {
     c.beginPath();
