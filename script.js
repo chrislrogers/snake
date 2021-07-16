@@ -108,6 +108,7 @@ function init() {
     canvas.height = canvasSize;
     scale = canvasSize / grid;
     food = new Vector(scale * (Math.floor(Math.random() * grid)), scale * (Math.floor(Math.random() * grid)));
+    snake.move(scale, 0);
     animate();
 }
 
