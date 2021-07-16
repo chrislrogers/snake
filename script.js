@@ -37,7 +37,7 @@ class Vector {
 class Snake {
     constructor() {
         this.body = [];
-        this.body[0] = new Vector(0, 0);
+        this.body[0] = new Vector(250, 250);
         this.direction = new Vector(0, 0);
     }
 
@@ -54,10 +54,18 @@ class Snake {
     eat(food) {
         let foodX = Math.floor(food.x);
         let foodY = Math.floor(food.y);
-        let bodyX = Math.floor(this.body[this.body.length-1].x);
-        let bodyY = Math.floor(this.body[this.body.length-1].y);
+        let bodyX = Math.floor(this.body[this.body.length - 1].x);
+        let bodyY = Math.floor(this.body[this.body.length - 1].y);
         if (foodX === bodyX && foodY === bodyY) {
-            this.body.push(new Vector(bodyX, bodyY));
+            tail++;
+            return true;
+        }
+        return false;
+    }
+
+    die() {
+        let head = this.body[this.body.length - 1];
+        if (head.x > canvas.width - 1 || head.x < 0 || head.y > canvas.height - 1 || head.y < 0) {
             return true;
         }
         return false;
@@ -79,6 +87,7 @@ class Snake {
 }
 
 let background = new Background('#401457', '#311340');
+let gameover = new Background('red', 'red');
 let snake = new Snake();
 
 function drawFood() {
@@ -99,15 +108,17 @@ function init() {
 function animate() {
     setTimeout(function onTick() {
         requestAnimationFrame(animate);
-        c.clearRect(0, 0, canvas.width, canvas.height);
-        if (snake.eat(food)) {
-            food.x = scale * (Math.floor(Math.random() * grid));
-            food.y = scale * (Math.floor(Math.random() * grid));
-        }
-        background.draw();
-        snake.update();
-        snake.draw();
-        drawFood();
+        if (!snake.die()) {
+            c.clearRect(0, 0, canvas.width, canvas.height);
+            if (snake.eat(food)) {
+                food.x = scale * (Math.floor(Math.random() * grid));
+                food.y = scale * (Math.floor(Math.random() * grid));
+            }
+            background.draw();
+            snake.update();
+            snake.draw();
+            drawFood();
+        } else { gameover.draw(); }
     }, 200)
 }
 
