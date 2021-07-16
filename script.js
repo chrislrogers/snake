@@ -5,6 +5,7 @@ let canvasSize = 500;
 let grid = 20;
 let scale;
 let food;
+let tail = 3;
 
 class Background {
     constructor(light, dark) {
@@ -13,7 +14,6 @@ class Background {
     }
 
     draw() {
-        let color = 0;
         for (let i = 0; i < grid; i++) {
             for (let j = 0; j < grid; j++) {
                 if ((i + j) % 2 === 0) {
@@ -22,7 +22,6 @@ class Background {
                     c.fillStyle = this.dark;
                 }
                 c.fillRect(i * scale, j * scale, scale, scale);
-                color++;
             }
         }
     }
@@ -43,26 +42,30 @@ class Snake {
     }
 
     update() {
-        this.body[0].x += this.direction.x;
-        this.body[0].y += this.direction.y;
+        let head = this.body[this.body.length - 1];
+        head.x += this.direction.x;
+        head.y += this.direction.y;
+        if (this.body.length > tail) {
+            this.body.shift();
+        }
+        this.body.push(new Vector(head.x, head.y));
     }
 
     eat(food) {
         let foodX = Math.floor(food.x);
         let foodY = Math.floor(food.y);
-        let bodyX = Math.floor(this.body[0].x);
-        let bodyY = Math.floor(this.body[0].y);
+        let bodyX = Math.floor(this.body[this.body.length-1].x);
+        let bodyY = Math.floor(this.body[this.body.length-1].y);
         if (foodX === bodyX && foodY === bodyY) {
+            this.body.push(new Vector(bodyX, bodyY));
             return true;
         }
         return false;
     }
 
-    setDirection(x, y) {
-        if (scale) {
-            this.direction.x = x;
-            this.direction.y = y;
-        }
+    move(x, y) {
+        this.direction.x = x;
+        this.direction.y = y;
     }
 
     draw() {
@@ -105,21 +108,21 @@ function animate() {
         snake.update();
         snake.draw();
         drawFood();
-    }, 300)
+    }, 200)
 }
 
 function keyToggle(key) {
     if (key === "ArrowLeft" || key === "a" || key === "A") {
-        snake.setDirection(-scale, 0);
+        snake.move(-scale, 0);
     }
     if (key === "ArrowRight" || key === "d" || key === "D") {
-        snake.setDirection(scale, 0);
+        snake.move(scale, 0);
     }
     if (key === "ArrowUp" || key === "w" || key === "W") {
-        snake.setDirection(0, -scale);
+        snake.move(0, -scale);
     }
     if (key === "ArrowDown" || key === "s" || key === "S") {
-        snake.setDirection(0, scale);
+        snake.move(0, scale);
     }
 }
 
