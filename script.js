@@ -6,6 +6,7 @@ let grid = 20;
 let scale;
 let food;
 let tail = 3;
+let offset = 1; // padding around snake segments
 
 class Background {
     constructor(light, dark) {
@@ -88,7 +89,7 @@ class Snake {
     draw() {
         for (let part of this.body) {
             c.beginPath();
-            c.rect(part.x, part.y, scale, scale);
+            c.rect(part.x + offset, part.y + offset, scale - (offset * 2), scale - (offset * 2));
             if (part === this.body[this.body.length - 1]) {
                 c.fillStyle = this.headColor;
             } else {
@@ -101,7 +102,7 @@ class Snake {
 
 let background = new Background('#401457', '#311340');
 let gameover = new Background('red', 'red');
-let snake = new Snake(250, 250, 'yellow', 'yellow');
+let snake = new Snake(250, 250, 'orange', 'yellow');
 
 function drawFood() {
     c.beginPath();
