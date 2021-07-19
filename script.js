@@ -45,12 +45,12 @@ class Snake {
 
     update() {
         let head = this.body[this.body.length - 1];
-        if (this.body.length > tail) {
-            this.body.shift();
-        }
         head.x += this.direction.x;
         head.y += this.direction.y;
         this.body.push(new Vector(head.x, head.y));
+        if (this.body.length > tail) {
+            this.body.shift();
+        }
     }
 
     eat(food) {
@@ -69,6 +69,13 @@ class Snake {
         let head = this.body[this.body.length - 1];
         if (head.x > canvas.width - 1 || head.x < 0 || head.y > canvas.height - 1 || head.y < 0) {
             return true;
+        }
+
+        for (let i = 0; i < this.body.length - 2; i++) {
+            if (this.body[i].x === head.x && this.body[i].y === head.y) {
+                return true;
+            }
+
         }
         return false;
     }
@@ -108,7 +115,7 @@ function init() {
     canvas.height = canvasSize;
     scale = canvasSize / grid;
     food = new Vector(scale * (Math.floor(Math.random() * grid)), scale * (Math.floor(Math.random() * grid)));
-    snake.move(scale, 0);
+    snake.move(0, scale);
     animate();
 }
 
